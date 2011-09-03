@@ -8,11 +8,13 @@
 那里找到《Real World Haskell》？
 =================================
 
-《Real World Haskell》可以在\ `官方主页免费阅读(英文) <http://book.realworldhaskell.org/read/>`_\ ，也可以\ `购买东南大学的影印版(英文) <http://book.douban.com/subject/4214143/>`_\ ，听说清华大学出版社正在翻译中文版，但是翻译了两年似乎还没见消息。
+《Real World Haskell》可以在\ `官方主页免费阅读(英文) <http://book.realworldhaskell.org/read/>`_\ ，也可以\ `购买东南大学的影印版(英文) <http://book.douban.com/subject/4214143/>`_\ 。
+
+听说清华大学出版社正在翻译中文版，但是翻译了两年似乎还没见踪影。
 
 我个人买的是东南大学的影印版，质量很好，推荐购买。
 
-联系我：
+联系我
 ========
 
 | gmail/gtalk: huangz1990
