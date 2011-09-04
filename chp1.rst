@@ -14,6 +14,7 @@ Haskell中的算数默认使用中序格式(infix form)，也可以将操作符�
     Prelude> (+) 2 2
     4
 
+
 负数
 =====
 
@@ -34,6 +35,7 @@ Haskell中的算数默认使用中序格式(infix form)，也可以将操作符�
 
     Prelude> 2 + (-2)
     0
+
 
 逻辑操作符于值比对
 ===================
@@ -82,6 +84,7 @@ Haskell的对比符和其他语言相似，像是\ ``==``\ 和\ ``>=``\ ，唯�
 
     Prelude> 1 /= 1
     False
+
 
 操作符优先级
 =============
@@ -226,6 +229,43 @@ Haskell使用双引号\ ``"``\ 包裹字符串(text string)，用单引号\ ``'`
     Prelude> 'h' : "ello"
     "hello"
 
+函数使用
+=========
+
+在没有歧义的情况下，一般不必使用括号包裹函数参数。
+
+::
+
+    Prelude> odd 3
+    True
+
+    Prelude> compare 2 3
+    LT
+
+函数调用的优先级比操作符高，所以一般也不用使用括号包围，比如下列语句是相等的：
+
+::
+
+    Prelude> compare 2 3 == LT
+    True
+
+    Prelude> (compare 2 3) == LT
+    True
+
+在一些可能产生歧义的语句，括号是必须的：
+
+::
+
+    Prelude> compare (sqrt 3) (sqrt 4)
+    LT
+
+    Prelude> compare sqrt 3 sqrt 4
+
+    <interactive>:1:1:
+        The function `compare' is applied to four arguments,
+        but its type `a0 -> a0 -> Ordering' has only two
+        In the expression: compare sqrt 3 sqrt 4
+        In an equation for `it': it = compare sqrt 3 sqrt 4
 
 其他
 ====
@@ -238,23 +278,23 @@ Haskell的类型名必须以\ *大写字母开头*\ ，而变量名则必须以\
 
     <interactive>:1:5: Not in scope: data constructor `BadVariableName'
 
-用\ ``:type``\ 语句可以查看变量的类型：
+用\ ``:type``\ 语句可以查看变量的类型，GHC中的快捷方式为\ ``:t``\ ：
 
-::
+.. code-block:: haskell
 
     Prelude> :type 1
     1 :: Num a => a
 
 用\ ``:module +``\ 载入模块，在GHC中也可以用快捷方式\ ``:m +``\ 。
 
-::
+.. code-block:: haskell
 
     Prelude> :module +Data.Ratio
     Prelude Data.Ratio> 
 
 GHC使用一个特殊变量\ ``it``\ 储存最后一个表达式的值。
 
-::
+.. code-block:: haskell
 
     Prelude Data.Ratio> 1 + 1
     2

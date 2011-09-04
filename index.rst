@@ -12,4 +12,5 @@
    :maxdepth: 2
 
    chp1
+   chp2
    about
