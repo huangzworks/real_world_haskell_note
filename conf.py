@@ -214,3 +214,5 @@ man_pages = [
     ('index', 'realworldhaskellnote', u'real world haskell note Documentation',
      [u'huangz1990'], 1)
 ]
+
+highlight_language = 'haskell'

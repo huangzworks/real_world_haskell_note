@@ -12,7 +12,7 @@
 Haskell中的类型
 ===============
 
-在Haskell中，类型是强类型(strong)、静态(static)和可以被自动推导出的(automaticllly inferred)。
+在Haskell中，类型是\ **强类型(strong)**\ 、\ **静态(static)**\ 和可以被自动\ **推导**\ 出的(automaticllly inferred)。
 
 强类型
 -------
@@ -21,7 +21,7 @@ Haskell中的类型
 
 比如用一个字符串和一个数字相加，给原本接受列表的函数传入数字，这些都是类型错误，而Haskell不会允许有这类错误的语句运行。
 
-另一个强类型的特点是，它\ *不会*\ 对值进行任何的自动转型(Coercion, conversion, casting)。
+另一个强类型的特点是，它\ *不会*\ 对值进行任何的\ **自动转型(Coercion, conversion, casting)**\ 。
 
 比如在很多语言中\ ``1 && True``\ 返回一个\ ``True``\ ，因为\ ``1``\ 会被自动转型为\ ``True``\ ，然后语句变成\ ``True && True``\ 。但是在Haskell中，Haskell不会将\ ``1``\ 自动转型成\ ``True``\ ，它只会报告说两个不同的类型试图进行逻辑比较，这是一个错误的表达式。
 
@@ -74,6 +74,8 @@ Double
 
 类型签名的格式是\ ``expression :: type``\ 。
 
+查看一个变量或函数的类型签名可以使用 ``:type``\ 语句。
+
 .. code-block:: haskell
 
     Prelude> 'a' :: Char
@@ -105,7 +107,7 @@ Haskell中最常见的复合数据类型是列表和元组。
 列表
 ----
 
-列表\ *只能组合相同类型的数据*\ ，它是\ *长度可变*\ 的，可以利用\ ``++``\ 等函数进行伸展或搜索，还有一大类其他常用函数可以对列表进行操作。
+列表只能组合\ *相同类型*\ 的数据，它是\ *长度可变*\ 的，可以利用\ ``++``\ 等函数进行伸展或收缩，还有一大类其他常用函数可以对列表进行操作。
 
 .. code-block:: haskell
 
@@ -131,7 +133,7 @@ Haskell中最常见的复合数据类型是列表和元组。
 元组
 -----
 
-元组\ *可以组合不同类型的数据*\ ，它是\ *定长的(长度不变)*\ ，所以也没有像列表那样的对元组进行伸缩处理的函数。
+\ **元组(tuple)**\ 可以组合\ *不同类型*\ 的数据，它是\ *定长的(长度不变)*\ ，所以也没有像列表那样的对元组进行伸缩处理的函数。
 
 因为元组的以上性质，所以它们通常只单纯用于保存数据，如果需要处理数据，一般使用列表。
 
@@ -208,4 +210,121 @@ Haskell中最常见的复合数据类型是列表和元组。
         In the first argument of `head', namely `(1, 2, 3)'
         In the expression: head (1, 2, 3)
         In an equation for `it': it = head (1, 2, 3)
+
+
+多态
+=======
+
+其实对于列表(还有Haskell里面的其他东西)来说，还有一个很有用的地方我们已经使用了但是没有注意到，就是函数里面的\ **多态(polymorphic)**\ 。
+
+比如对于一个列表来说，无论它里面储存的是什么类型的值，我们都可以用\ ``head``\ 取出它的数据：
+
+.. code-block:: haskell
+
+    Prelude> head [1..10]   -- 数值列表
+    1
+
+    Prelude> head ["good", "morning"]   -- 字符串列表
+    "good"
+
+    Prelude> head "sphinx"  -- 字符串(单字符列表)
+    's'
+
+对各种类型的列表，\ ``head``\ 函数都可以返回正确的值。
+
+我们可以试试用\ ``:type``\ 打开\ ``head``\ 的类型签名，看看里面有什么：
+
+.. code-block:: haskell
+
+    Prelude> :type head
+    head :: [a] -> a
+
+在看看\ ``++``\ 操作符(它要用括号包裹起来)：
+
+.. code-block:: haskell
+
+    Prelude> :type (++)
+    (++) :: [a] -> [a] -> [a]
+
+我们发现两个函数里面的签名都有\ ``a``\ ，但是如果我们查看一个字符串(String)类型专用的函数\ ``words``\ ，则有不一样的发现：
+
+.. code-block:: haskell
+
+    Prelude> :type words
+    words :: String -> [String]
+
+和列表不一样的是，\ ``words``\ 的函数签名里没有\ ``a``\ ，只有\ ``String``\ 。
+
+\ ``head``\ 函数、\ ``++``\ 函数和\ ``words``\ 函数有什么不同？
+
+答案是\ ``head``\ 和\ ``++``\ 是多态的，而\ ``words``\ 不是——也即是说，\ ``words``\ \ *只能*\ 处理字符串类型，而\ ``head``\ 和\ ``++``\ 不在乎列表内储存的是什么类型，它只要求传入的参数是一个列表即可。
+
+仔细观察\ ``head``\ 函数的定义(\ ``++``\ 也是类似的)：
+
+.. code-block:: haskell
+
+    Prelude> :type head
+    head :: [a] -> a
+
+这里\ ``a``\ 是一个\ **类型变量(type variable)**\ ，它可以是任何类型，就像数学里的代数一样：给它一个字符串类型的列表，它就可以处理\ ``String``\ 类型，给它一个整数值类型的列表，它就可以处理\ ``Int``\ 类型，诸如此类。
+
+整条类型签名的意思就是：\ ``head``\ 函数接受一个\ ``a``\ 类型的列表(\ ``[a]``\ )，然后返回一个\ ``a``\ ，其中\ *返回值的类型和之前列表里面保存的元素的类型一致*\ ，但是它不要求\ ``a``\ 是什么类型，它不在乎。
+
+另一方面，看看\ ``words``\ 函数：
+
+.. code-block:: haskell
+    
+    Prelude> :type words
+    words :: String -> [String]
+
+这里它的签名意思是：\ ``words``\ 接受一个\ ``String``\ 类型值，然后返回一个\ ``String``\ 类型的列表(\ ``[String]``\ )。
+
+这个\ ``String``\ 是一个\ **类型名**\ ，而不是一个类型变量，它指定了\ ``words``\ 函数\ *只能*\ 接受\ ``String``\ 类型的值，所以它不是多态的。
+
+.. note:: 这也说明了，为什么类型名只能以大写字母开头，因为它必须和类型变量区别开来。
+
+
+编写简单函数，并载入它
+=======================
+
+我们可以编写一个函数，然后载入到GHC当中使用：
+
+.. literalinclude:: source/chp2/add.hs
+
+.. note:: 在函数定义中，我们并没有像很多语言那样使用\ ``return``\ 返回函数的值，因为Haskell中，函数是一簇\ **表达式(expression)**\ ，而不是一条条\ **语句(statement)**\ ，表达式的值就是函数的值。
+
+然后用\ ``:load``\ 载入：
+
+::
+
+    Prelude> :load add.hs
+    [1 of 1] Compiling Main             ( add.hs, interpreted )
+    Ok, modules loaded: Main.
+
+    *Main> add 2 3
+    5
+
+.. note:: GHC中的语句和Haskell有部分是不同的，如果你在GHCI中输入\ ``add a b = a + b``\ ，GHCI会返回一个错误。
+
+变量
+-----
+
+在Haskell中(很多其他函数式编程语言也是类似)，变量是\ *不可以*\ 被重复赋值的，也即是，将一个\ **变量名(variable name)**\ 和一个表达式(可以是一个值、一个函数或其他什么东西)绑定之后，这个变量名总是代表这个表达式，而不会指向另外一些别的东西。
+
+我们编写一个重复定义某个变量值的程序：
+
+.. literalinclude:: source/chp2/assign.hs
+
+然后尝试载入Haskell里运行：
+
+::
+
+    Prelude> :load assign
+    [1 of 1] Compiling Main             ( assign.hs, interpreted )
+
+    assign.hs:6:1:
+    Multiple declarations of `Main.luckly_number'
+    Declared at: assign.hs:3:1
+    assign.hs:6:1
+    Failed, modules loaded: none.
 

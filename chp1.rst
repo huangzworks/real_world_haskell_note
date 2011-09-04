@@ -4,7 +4,7 @@
 算数
 ====
 
-Haskell中的算数默认使用中序格式(infix form)，也可以将操作符用括号包围，然后使用前序格式(prefix form)。
+Haskell中的算数默认使用\ **中序格式(infix form)**\ ，也可以将操作符用括号包围，然后使用\ **前序格式(prefix form)**\ 。
 
 ::
 
@@ -31,7 +31,7 @@ Haskell中的算数默认使用中序格式(infix form)，也可以将操作符�
 
     <interactive>:1:1:
         Precedence parsing error
-                cannot mix `+' [infixl 6] and prefix `-' [infixl 6] in the same infix expression
+        cannot mix `+' [infixl 6] and prefix `-' [infixl 6] in the same infix expression
 
     Prelude> 2 + (-2)
     0
@@ -144,7 +144,7 @@ Haskell的对比符和其他语言相似，像是\ ``==``\ 和\ ``>=``\ ，唯�
 列表
 =====
 
-用方括号包裹一簇元素的类型称之为列表(list)，列表可以是空的或者是非空的，但\ *必须拥有相同类型的值*\ 。
+用方括号包裹一簇元素的类型称之为\ **列表(list)**\ ，列表可以是空的或者是非空的，但\ *必须拥有相同类型的值*\ 。
 
 ::
     
@@ -162,7 +162,7 @@ Haskell的对比符和其他语言相似，像是\ ``==``\ 和\ ``>=``\ ，唯�
     In the expression: [1, 2, "error"]
     In an equation for `it': it = [1, 2, "error"]
 
-列表的一个有用功能可以指定迭代的起始值、结束值和步长，让列表自动生成值，称之为enumeration。
+列表的一个有用功能可以指定迭代的起始值、结束值和步长，让列表自动生成值，称之为\ **enumeration**\ 。
 
 ::
 
@@ -200,7 +200,7 @@ Haskell的对比符和其他语言相似，像是\ ``==``\ 和\ ``>=``\ ，唯�
 字符串和单个字符
 ==================
 
-Haskell使用双引号\ ``"``\ 包裹字符串(text string)，用单引号\ ``'``\ 包裹单字符(character)。
+Haskell使用双引号\ ``"``\ 包裹\ **字符串(text string)**\ ，用单引号\ ``'``\ 包裹\ **单字符(character)**\ 。
 
 ::
 
@@ -252,7 +252,7 @@ Haskell使用双引号\ ``"``\ 包裹字符串(text string)，用单引号\ ``'`
     Prelude> (compare 2 3) == LT
     True
 
-在一些可能产生歧义的语句，括号是必须的：
+Haskell的函数是\ **左结合**\ 的，在一些可能产生歧义的语句，括号是必须的：
 
 ::
 
@@ -267,10 +267,21 @@ Haskell使用双引号\ ``"``\ 包裹字符串(text string)，用单引号\ ``'`
         In the expression: compare sqrt 3 sqrt 4
         In an equation for `it': it = compare sqrt 3 sqrt 4
 
+.. note:: 函数调用是左结合的，也即是对语句\ ``a b c d``\ ，执行\ ``(((a b) c) d)``\ 。
+
+
+函数类型
+========
+
+当一个相同的参数传入一个给定函数，总能返回固定结果的函数，该函数称之为\ **纯(pure)**\ 的。
+
+而对一些带有\ **副作用(side effect)**\ 、输入不明确、或需要调用外部资源的函数，我们称之为\ **不纯(impure)**\ 的。
+
+
 其他
 ====
 
-Haskell的类型名必须以\ *大写字母开头*\ ，而变量名则必须以\ *小写字母开头*\ :
+Haskell的类型名必须以\ *大写字母开头*\ (比如\ ``Int``\ ，\ ``String``\ )，而变量名则必须以\ *小写字母开头*\ :
 
 ::
 
@@ -280,21 +291,21 @@ Haskell的类型名必须以\ *大写字母开头*\ ，而变量名则必须以\
 
 用\ ``:type``\ 语句可以查看变量的类型，GHC中的快捷方式为\ ``:t``\ ：
 
-.. code-block:: haskell
+::
 
     Prelude> :type 1
     1 :: Num a => a
 
 用\ ``:module +``\ 载入模块，在GHC中也可以用快捷方式\ ``:m +``\ 。
 
-.. code-block:: haskell
+::
 
     Prelude> :module +Data.Ratio
     Prelude Data.Ratio> 
 
 GHC使用一个特殊变量\ ``it``\ 储存最后一个表达式的值。
 
-.. code-block:: haskell
+::
 
     Prelude Data.Ratio> 1 + 1
     2
