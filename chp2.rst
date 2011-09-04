@@ -1,16 +1,16 @@
 第二章：类型和函数
 *******************
 
-什么是类型
-==========
+什么是类型 p17
+===============
 
 在Haskell中，\ *所有的*\ 表达式和函数都有类型。
 
 类型系统为我们提供抽象，并隐藏底层细节。
 
 
-Haskell中的类型
-===============
+Haskell中的类型 p17-21
+=========================
 
 在Haskell中，类型是\ **强类型(strong)**\ 、\ **静态(static)**\ 和可以被自动\ **推导**\ 出的(automaticllly inferred)。
 
@@ -38,8 +38,8 @@ Haskell中的类型
 Haskell编译器在绝大部分时间内可以自动推导出表达式的类型，我们也可以显式地指定每个表达式的类型，但这通常不是必须的。
 
 
-Haskell的一些常用基本类型
-============================
+Haskell的一些常用基本类型 p21
+==============================
 
 Char
 -----
@@ -67,11 +67,10 @@ Double
 浮点数。
 
 
-类型签名(type signature)
-===========================
+类型签名(type signature) p22
+=============================
 
 一般来说，Haskell可以推导出表达式的类型，但是，我们也可以用类型签名显式地指定类型。
-
 类型签名的格式是\ ``expression :: type``\ 。
 
 查看一个变量或函数的类型签名可以使用 ``:type``\ 语句。
@@ -88,8 +87,8 @@ Double
     1 :: Num a => a
 
 
-复合数据类型：列表(list)和元组(tuple)
-=======================================
+复合数据类型：列表(list)和元组(tuple) p23
+===========================================
 
 复合数据类型既是组合使用其他类型的类型。
 
@@ -104,8 +103,8 @@ Haskell中最常见的复合数据类型是列表和元组。
 元组     可以组合相同或不同类型     固定长度      fst, snd
 =====    =======================    =========     =================
 
-列表
-----
+列表 p23
+--------
 
 列表只能组合\ *相同类型*\ 的数据，它是\ *长度可变*\ 的，可以利用\ ``++``\ 等函数进行伸展或收缩，还有一大类其他常用函数可以对列表进行操作。
 
@@ -130,8 +129,8 @@ Haskell中最常见的复合数据类型是列表和元组。
         In the first argument of `(++)', namely `[1, 2]'
         In the expression: [1, 2] ++ "hello"
 
-元组
------
+元组 p24
+---------
 
 \ **元组(tuple)**\ 可以组合\ *不同类型*\ 的数据，它是\ *定长的(长度不变)*\ ，所以也没有像列表那样的对元组进行伸缩处理的函数。
 
@@ -212,8 +211,8 @@ Haskell中最常见的复合数据类型是列表和元组。
         In an equation for `it': it = head (1, 2, 3)
 
 
-多态
-=======
+多态 p23-25, p36-38
+====================
 
 其实对于列表(还有Haskell里面的其他东西)来说，还有一个很有用的地方我们已经使用了但是没有注意到，就是函数里面的\ **多态(polymorphic)**\ 。
 
@@ -284,8 +283,8 @@ Haskell中最常见的复合数据类型是列表和元组。
 .. note:: 这也说明了，为什么类型名只能以大写字母开头，因为它必须和类型变量区别开来。
 
 
-编写简单函数，并载入它
-=======================
+编写简单函数，并载入它 p27
+===========================
 
 我们可以编写一个函数，然后载入到GHC当中使用：
 
@@ -306,8 +305,8 @@ Haskell中最常见的复合数据类型是列表和元组。
 
 .. note:: GHC中的语句和Haskell有部分是不同的，如果你在GHCI中输入\ ``add a b = a + b``\ ，GHCI会返回一个错误。
 
-变量
------
+变量 p28-29
+-------------
 
 在Haskell中(很多其他函数式编程语言也是类似)，变量是\ *不可以*\ 被重复赋值的，也即是，将一个\ **变量名(variable name)**\ 和一个表达式(可以是一个值、一个函数或其他什么东西)绑定之后，这个变量名总是代表这个表达式，而不会指向另外一些别的东西。
 
@@ -328,3 +327,58 @@ Haskell中最常见的复合数据类型是列表和元组。
     assign.hs:6:1
     Failed, modules loaded: none.
 
+条件求值 p29-32
+-----------------
+
+Haskell中\ ``if``\ 语句的格式如下：
+
+::
+
+    if -- predicate
+    then -- expression if predicate is True
+    else -- expression is predicate is False
+
+其中\ ``then``\ 和\ ``else``\ 之后的表达式称之为\ **分支(branch)**\ ，分支的类型\ *必须相同*\ ，否则编译器会报错。
+
+换个角度来说，因为Haskell中每个表达式都有一个值，而函数的值也是一个表达式，所以一个函数不应该返回不同的两种值。
+
+::
+
+    Prelude> if True then 1+1 else 4
+    2
+
+    Prelude> if True then 1+1 else "oops~~~"
+
+    <interactive>:1:16:
+        No instance for (Num [Char])
+        arising from the literal `1'
+        Possible fix: add an instance declaration for (Num [Char])
+        In the second argument of `(+)', namely `1'
+        In the expression: 1 + 1
+        In the expression: if True then 1 + 1 else "oops~~~"
+
+另一方面，当我们使用命令式语言时，通常可以省略\ ``else``\ ，因为在这些语言中\ ``else``\ 是一个语句。
+
+但在Haskell中，因为它是一个表达式，所以我们也\ *不能*\ 省略\ ``else``\ 表达式。
+
+::
+
+    Prelude> if True then 1+1
+
+    <interactive>:1:17: parse error (possibly incorrect indentation)
+
+我们写一个与列表函数\ ``drop``\ 一样的函数\ ``myDrop``\ 作为演示：
+
+.. literalinclude:: source/chp2/myDrop.hs
+
+如果你愿意，也可以将\ ``myDrop``\ 写成一行
+
+.. literalinclude:: source/chp2/myDropInOneLine.hs
+
+
+惰性求值 p32-36
+==================
+
+通常语言有两种求值方式，一种是\ **严格求值(strict evaluation)**\ ，另一种是\ **非严格求值(nonstrict evaluation)**\ 。
+
+Haskell使用非严格求值，也称\ **惰性求值(lazy evaluation)**\ 。
