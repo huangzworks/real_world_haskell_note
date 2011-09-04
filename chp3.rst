@@ -6,9 +6,9 @@
 
 定义一个类型需要几个部分：
 
-1.类型名(type name, type constructor)
-2.值构造器(value constructor, data constructor)
-3.组成元素(components)
+- 类型名(type name, type constructor)
+- 值构造器(value constructor, data constructor)
+- 组成元素(components)
 
 举一个例子，一个书籍类型的定义可能是这样的：
 
@@ -67,8 +67,8 @@
     instance Show Book -- Defined at AnotherBookStore.hs:4:23-26
 
 
-别名
-=====
+别名 p43-44
+=============
 
 我们可以用\ ``type``\ 关键字给一个已有的类型一个\ **别名(synonyms)**\ ，主要为了增强程序的可读性。
 
@@ -88,4 +88,59 @@
     data BookInfo = Book Id Title Authors
         -- Defined at BookStore_version_2.hs:7:6-13
     instance Show BookInfo -- Defined at BookStore_version_2.hs:8:27-30
+
+
+代数数据类型 p44-49
+=====================
+
+\ **代数数据类型(Algebraic Data Type)**\ 就是可以拥有\ *多个*\ 值构造器的类型。
+
+比如下面的\ ``Roygbiv``\ 类型就是一个代数数据类型：
+
+.. literalinclude:: source/chp3/Roygbiv.hs
+
+
+模式匹配 p50-54
+=================
+
+Haskell允许我们将函数组织成一系列方程(equation)等式，然后使用该函数的时候，对比每个方程直到找到匹配(相等)的方程，然后执行方程内的表达式，这一机制称之为\ **模式匹配(pattern match)**\ 。
+
+比如要写一个我们自己的\ ``not``\ 操作符，可以这样写：
+
+.. literalinclude:: source/chp3/myNot.hs
+
+假如我们执行\ ``myNot False``\ 的话，Haskell就会对比第一个方程，然后发现不匹配，于是对比第二个方程，然后匹配成功，于是执行第二个方程内的表达式，也即是，返回\ ``True``\ 。
+
+还有一个更直观的例子，我们可以写一个函数\ ``checkIt``\ 比对输入数值，对\ ``0``\ 和\ ``1``\ 输出\ ``good``\ ，其他数值输出\ ``bad``\ ：
+
+不过问题是整数值的范围很大，我们不可能一个个地写匹配：
+
+::
+
+    checkIt 0 = "good"
+    checkIt 1 = "good"
+    checkIt 2 = "bad"
+    checkIt 3 = "bad"
+    checkIt 4 = "bad"
+    -- 很多很多。。。
+
+这时你需要一个\ **Wild Card Pattrn**\ 来搭救你，它可以作为模式匹配的通用匹配(相当于\ ``else``\ )，所有和Wild Card Pattrn对比的模式都会匹配。
+
+Wild Card Pattrn需要你使用一个\ ``_``\ 作为匹配符，使用它，我们上面的\ ``checkIt``\ 函数可以这样写：
+
+.. literalinclude:: source/chp3/checkIt.hs
+
+运行：
+
+::
+
+    *Main> :load checkIt
+    [1 of 1] Compiling Main             ( checkIt.hs, interpreted )
+    Ok, modules loaded: Main.
+
+    *Main> checkIt 0
+    "good"
+
+    *Main> checkIt 3
+    "bad"
 
