@@ -285,3 +285,264 @@ Record Syntax p55-56
     c_tree :: Tree Char
 
 注意当我们执行\ ``:type num_tree``\ 和\ ``:type c_tree``\ 时，返回的值各有不同。
+
+
+错误报告 p60-61
+=================
+
+抛出错误可以使用\ ``error``\ 方法，它中断编译并返回错误信息：
+
+.. literalinclude:: source/chp3/error.hs
+
+\ ``guess``\ 函数只有在收到\ ``10086``\ 的时候才不会出错。
+
+::
+    
+    *Main> guess 1
+    "*** Exception: bad~ bad~ bad~
+
+    *Main> guess 50
+    "*** Exception: bad~ bad~ bad~
+
+    *Main> guess 10086
+    "luckly"
+
+
+局部变量 p61-63
+===============
+
+let p.61
+---------
+
+\ ``let``\ 结构可以让你建立局部变量，格式如下：
+
+::
+
+    let ...
+    in ...
+
+以下是一个关于借钱的\ ``lend``\ 函数：
+
+.. literalinclude:: source/chp3/lending.hs
+
+遮蔽 p.62
+-----------
+
+\ ``let``\ 可以互相嵌套，如果内层和外层有同样的名字时，内层的名字覆盖外层的名字，这一现象称之为\ **遮蔽(shadowing)**\ 。
+
+例如在下面的表达式中，将打印出\ ``("foo", 1)``\ 。
+
+::
+
+    let x = 1
+        in ((let x = "foo" in x), x)
+
+where p.63
+---------------
+
+\ ``where``\ 结构和\ ``let``\ 类似，都可以定义局部变量，但是\ ``where``\ 将局部变量的赋值放到表达式后面进行，而\ ``let``\ 放在前面。
+
+下面的\ ``lend``\ 函数和上面用\ ``let``\ 定义的作用一样：
+
+.. literalinclude:: source/chp3/where.hs
+
+
+局部函数 p63-64
+================
+
+\ ``let``\ 和\ ``double``\ 不但可以用来定义变量，还可以用来定义函数(其实它们都是表达式)：
+
+::
+
+    Prelude> let double num = num * 2 in double 5
+    10
+
+
+case结构 p.66-67
+==================
+
+\ ``case``\ 结构格式：
+
+::
+
+    case value of 
+        pattern_1 -> expression_1
+        pattern_2 -> expression_2
+        ...
+        pattern_n -> expression_n
+        _ -> default_expression
+
+下面是一个识别问候语，并返回相应问候语的程序：
+
+.. literalinclude:: source/chp3/case.hs
+
+运行：
+
+::
+
+    *Main> :load case
+    [1 of 1] Compiling Main             ( case.hs, interpreted )
+    Ok, modules loaded: Main.
+
+    *Main> greet "hello"
+    "world"
+
+    *Main> greet "long time no seeeeeeeeeeee~"
+    "hello"
+
+
+守卫 p.68-70
+==============
+
+Haskell还提供了另一种和模式匹配\ ``case``\ 以及\ ``if``\ 很相似、但结构更清晰的匹配方法，称之为\ **守卫(guard)**\ 。
+
+我们用守卫重写上面的问候语程序：
+
+.. literalinclude:: source/chp3/guard.hs
+
+可以看到，守卫的每个匹配由\ ``|``\ 分割，每个匹配需是一个返回布尔值的表达式(比如\ ``value == "hello"``\ ，而结果表达式则放到等号之后(比如\ ``world``\ )。
+
+
+if、case、守卫以及模式匹配
+============================
+
+\ ``if``\ 结构、\ ``case``\ 结构、守卫以及模式匹配的作用都非常相似，值得我们仔细地研究一下它们的微小区别，以及它们适用的地方。
+
+if
+---
+
+首先，\ ``if``\ 的结构最简单：
+
+::
+
+    if predicate
+    then expression_1
+    else expression_2
+
+如果\ ``predicate``\ 为\ ``True``\ ，则执行\ ``expression_1``\ ；如果为\ ``False``\ ，则执行\ ``expression_2``\ 。
+
+很明显，\ ``if``\ 结构适用于\ *只有两种情形的匹配*\ ，一旦情况超过两种，\ ``if``\ 语句就需要嵌套使用，可读性就会大大降低。
+
+比如下面一个例子，用\ ``if``\ 写起来就非常麻烦：
+
+::
+
+    check value = if value == 10 
+                  then "value == 10"
+                  else if value == 3
+                  then "value == 3"
+                  else if value == 5
+                  then "value == 5"
+                  else "value not equals to 10, 3 or 5"
+
+case
+------
+
+\ ``case``\ 语句的结构如下：
+
+::
+
+    case value of
+        value_1 -> expression_1
+        value_2 -> expression_2
+        ...
+        value_n -> expression_n
+        _ -> default_expression
+
+\ ``case``\ 结构将\ ``value``\ 和结构体内的各个值对比(\ ``value_1``\ ，\ ``value_2``\ 。。。)，当某一个值对比成功时，则执行相应的表达式。
+
+如果所有对比都不成功，就执行(可能有的)Wild Card Pattrn。
+
+可以看出，\ ``case``\ 最适合的是\ *值之间对比*\ 的情况。
+
+比如说，用\ ``case``\ 来写上面\ ``check``\ 函数最适合不过了：
+
+::
+    
+    check value = case value of
+                    10 -> "value == 10"
+                    3  -> "value == 3" 
+                    5  -> "value == 5"
+                    _  -> "value not equals to 10, 3 or 5"
+
+\ ``case``\ 的缺点(也是它的优点)是不能在对比式中写表达式，所以它做不到像\ ``if``\ 语句那样的事情：
+
+::
+
+    if value * 5 
+    then ...
+    else ...
+
+当然这个缺点可以用\ ``let``\ 或者\ ``where``\ 来克服，只是这样一来就不如\ ``case``\ 或守卫方便了：
+
+::
+
+    let new_value = value * 5
+    in case new_value of
+        ... -> ...
+
+守卫
+-----
+
+守卫的格式是用\ ``|``\ 分割每条匹配：
+
+::
+
+    | predicate_1 = expression_1
+    | predicate_2 = expression_2
+    | ...
+    | otherwise
+
+守卫按顺序地检查每一条判断语句，找到合适的就执行相应的表达式。
+
+守卫可以看作是\ ``if``\ 的多匹配版本，它和\ ``if``\ 一样可以在判断语句内执行表达式计算。
+
+\ ``check``\ 语句的守卫版本：
+
+::
+
+    check value 
+        | value == 5  = "value == 5"
+        | value == 10 = "value == 10"
+        | value == 3  = "value == 3"
+        | otherwise   = "value not equals to 5, 10 or 3"
+
+模式匹配
+---------
+
+模式匹配和上面的三种对比结构不尽相同，它是以函数定义的方法来匹配对比式，最大的好处是模式匹配写的语句非常直白和易读。
+
+用模式匹配写的\ ``check``\ 函数可能是四种匹配方法中最易读的。
+
+::
+
+    check 10 = "value == 10"
+    check 5  = "value == 5"
+    check 3  = "value == 3"
+    check _  = "value not equals to 10, 5 or 3"
+
+而另一方面，模式匹配的功能不如前面的三种语句，比如你没有办法在模式匹配里比对范围，也不能在对比式中写表达式。
+
+想想如果我们的\ ``check``\ 函数不是比对三个值(\ ``3``\ 、\ ``5``\ 、 \ ``10``\ )，而是一个范围形函数，用模式匹配是没有办法写完这种匹配的(除非你是机器人。。。)：
+
+::
+    
+    check 1 = "bad"
+    check 2 = "bad"
+    ...
+    check 10086 = "good"    -- 只有10086是"好"数
+    check 10087 = "bad"
+    check 10089 = "bad"
+    ...
+
+
+小结
+-----
+
+如果匹配只有两种情况，使用\ ``if``\ 结构最方便。
+
+如果匹配情况很多，而且需要在对比式中写表达式(比如\ ``value * 2 > 10086``\ )的话，你应该使用守卫。
+
+如果匹配情况很多，但全都是简单的对比(\ ``value == 10086``\ 这样的语句的话，你应该使用\ ``case``\ 。
+
+模式匹配可以用于定义匹配情况比较少的函数，但它不适合情况较多或具有范围性的匹配。
