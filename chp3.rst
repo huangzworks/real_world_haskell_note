@@ -239,6 +239,7 @@ Record Syntax p55-56
     *Main> hp
     Book {bookId = 2552, bookTitle = "mary poter", bookAuthors = ["j.k loli"]}
 
+.. note:: 注意当按顺序创建值时，不需要用\ ``{}``\ 包围参数。
 
 多态类型 p57-58
 =================
