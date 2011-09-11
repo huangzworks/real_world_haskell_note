@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'real world haskell note'
+project = u'《real world haskell》读书笔记'
 copyright = u'2011, huangz1990'
 
 # The version info for the project you're documenting, acts as replacement for
