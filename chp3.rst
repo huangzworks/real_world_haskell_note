@@ -31,7 +31,7 @@
 
     *Main> let sicp = Book 123123 "SICP" ["ha", "gjs"]  -- 用值构造器(Book)生成值
     *Main> sicp
-    ok 123123 "SICP" ["ha","gjs"]
+    Book 123123 "SICP" ["ha","gjs"]
 
     *Main> :type sicp   -- 值的类型是BookInfo
     sicp :: BookInfo
